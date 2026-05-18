@@ -1,58 +1,100 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# School Homework Project
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This is a web application project built for school homework, utilizing the powerful PHP framework Laravel.
 
-## About Laravel
+## 🚀 Tech Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Backend:** PHP 8.x, Laravel
+- **Frontend:** HTML, CSS, JavaScript (TailwindCSS / Vite)
+- **Database:** SQLite / MySQL / PostgreSQL (Configure in `.env`)
+- **Testing:** Pest / PHPUnit
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📋 Prerequisites
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Before you begin, ensure you have the following installed on your machine:
+- [PHP](https://www.php.net/downloads) (v8.2 or higher recommended)
+- [Composer](https://getcomposer.org/download/)
+- [Node.js & npm](https://nodejs.org/) (for frontend asset compilation)
+- Database server (MySQL, PostgreSQL, or you can use the default SQLite)
 
-## Learning Laravel
+## 🛠️ Installation & Setup
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Follow these steps to get the project running on your local machine:
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone the repository** (if you haven't already):
+   ```bash
+   git clone <repository-url>
+   cd LaravelProject
+   ```
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+2. **Install PHP dependencies:**
+   ```bash
+   composer install
+   ```
 
-## Agentic Development
+3. **Install frontend dependencies:**
+   ```bash
+   npm install
+   ```
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+4. **Environment Configuration:**
+   Copy the example environment file and configure it if necessary (the defaults usually work fine for local development with SQLite).
+   ```bash
+   cp .env.example .env
+   ```
+
+5. **Generate Application Key:**
+   ```bash
+   php artisan key:generate
+   ```
+
+6. **Run Migrations:**
+   Create the necessary database tables. If you are using SQLite, this will create the database file for you.
+   ```bash
+   php artisan migrate
+   ```
+
+7. **(Optional) Seed the Database:**
+   If you want to populate the database with initial/dummy data:
+   ```bash
+   php artisan db:seed
+   ```
+
+## 💻 Running the Application
+
+To run the application locally, you need to start both the Laravel development server and the Vite development server (for compiling frontend assets).
+
+1. **Start the Laravel development server:**
+   ```bash
+   php artisan serve
+   ```
+   The application will be accessible at `http://localhost:8000`.
+
+2. **Start the Vite development server** (in a new terminal tab/window):
+   ```bash
+   npm run dev
+   ```
+
+## 🧪 Testing
+
+To run the test suite and ensure everything is working correctly, you can use Pest (or PHPUnit):
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+php artisan test
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## 📖 About Laravel & PHP
 
-## Contributing
+**PHP** is a popular general-purpose scripting language that is especially suited to web development.
+**Laravel** is a web application framework with expressive, elegant syntax built on top of PHP. It provides a structure and starting point for creating your application, allowing you to focus on creating something amazing while it sweats the details.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Simple, fast routing.
+- Powerful dependency injection container.
+- Expressive, intuitive database ORM (Eloquent).
+- Database agnostic schema migrations.
+- Robust background job processing.
 
-## Code of Conduct
+## 🎓 Academic Information
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is submitted as part of a school assignment.
