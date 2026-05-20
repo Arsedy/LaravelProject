@@ -75,6 +75,16 @@ To run the application locally, you need to start both the Laravel development s
    npm run dev
    ```
 
+### Run both together with one command
+
+If you want a single command to start both servers, use:
+
+```bash
+npm run dev:full
+```
+
+This command starts Laravel on `http://127.0.0.1:8000` and Vite at the same time, so you only need one terminal to launch both.
+
 ## 🧪 Testing
 
 To run the test suite and ensure everything is working correctly, you can use Pest (or PHPUnit):
