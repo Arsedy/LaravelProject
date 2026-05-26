@@ -105,6 +105,12 @@ Laravel takes the pain out of development by easing common tasks used in many we
 - Database agnostic schema migrations.
 - Robust background job processing.
 
+## 🙌 Acknowledgements
+
+This project is built using the following HTML/CSS templates:
+- [ecommerce-website-html-css](https://github.com/alirezatayebinejad/ecommerce-website-html-css) by [alirezatayebinejad](https://github.com/alirezatayebinejad).
+- [AdminLTE](https://github.com/ColorlibHQ/AdminLTE) by [ColorlibHQ](https://github.com/ColorlibHQ).
+
 ## 🎓 Academic Information
 
 This project is submitted as part of a school assignment.
