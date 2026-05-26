@@ -108,7 +108,6 @@ Laravel takes the pain out of development by easing common tasks used in many we
 ## 🙌 Acknowledgements
 
 This project is built using the following HTML/CSS templates:
-- [ecommerce-website-html-css](https://github.com/alirezatayebinejad/ecommerce-website-html-css) by [alirezatayebinejad](https://github.com/alirezatayebinejad).
 - [AdminLTE](https://github.com/ColorlibHQ/AdminLTE) by [ColorlibHQ](https://github.com/ColorlibHQ).
 
 ## 🎓 Academic Information
