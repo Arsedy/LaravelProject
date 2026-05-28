@@ -22,11 +22,11 @@
 							<div class="footer">
 								<h3 class="footer-title">Categories</h3>
 								<ul class="footer-links">
-									<li><a href="#">Hot deals</a></li>
-									<li><a href="#">Laptops</a></li>
-									<li><a href="#">Smartphones</a></li>
-									<li><a href="#">Cameras</a></li>
-									<li><a href="#">Accessories</a></li>
+									<li><a href="{{ route('store') }}">Hot deals</a></li>
+									<li><a href="{{ route('store') }}">Laptops</a></li>
+									<li><a href="{{ route('store') }}">Smartphones</a></li>
+									<li><a href="{{ route('store') }}">Cameras</a></li>
+									<li><a href="{{ route('store') }}">Accessories</a></li>
 								</ul>
 							</div>
 						</div>
@@ -37,11 +37,11 @@
 							<div class="footer">
 								<h3 class="footer-title">Information</h3>
 								<ul class="footer-links">
-									<li><a href="#">About Us</a></li>
-									<li><a href="#">Contact Us</a></li>
-									<li><a href="#">Privacy Policy</a></li>
-									<li><a href="#">Orders and Returns</a></li>
-									<li><a href="#">Terms & Conditions</a></li>
+									<li><a href="{{ route('blank') }}">About Us</a></li>
+									<li><a href="{{ route('blank') }}">Contact Us</a></li>
+									<li><a href="{{ route('blank') }}">Privacy Policy</a></li>
+									<li><a href="{{ route('blank') }}">Orders and Returns</a></li>
+									<li><a href="{{ route('blank') }}">Terms & Conditions</a></li>
 								</ul>
 							</div>
 						</div>
@@ -50,8 +50,8 @@
 							<div class="footer">
 								<h3 class="footer-title">Service</h3>
 								<ul class="footer-links">
-									<li><a href="#">My Account</a></li>
-									<li><a href="#">View Cart</a></li>
+									<li><a href="#">Login / Signup</a></li>
+									<li><a href="{{ route('store') }}">View Cart</a></li>
 									<li><a href="#">Wishlist</a></li>
 									<li><a href="#">Track My Order</a></li>
 									<li><a href="#">Help</a></li>
@@ -95,10 +95,10 @@
 		<!-- /FOOTER -->
 
 		<!-- jQuery Plugins -->
-		<script src="{{ asset('assets') }}/js/jquery.min.js"></script>
-		<script src="{{ asset('assets') }}/js/bootstrap.min.js"></script>
-		<script src="{{ asset('assets') }}/js/slick.min.js"></script>
-		<script src="{{ asset('assets') }}/js/nouislider.min.js"></script>
-		<script src="{{ asset('assets') }}/js/jquery.zoom.min.js"></script>
-		<script src="{{ asset('assets') }}/js/main.js"></script>
-		<script src="{{ asset('assets') }}/js/cart.js"></script>
+		<script src="{{ asset('frontend-assets') }}/js/jquery.min.js"></script>
+		<script src="{{ asset('frontend-assets') }}/js/bootstrap.min.js"></script>
+		<script src="{{ asset('frontend-assets') }}/js/slick.min.js"></script>
+		<script src="{{ asset('frontend-assets') }}/js/nouislider.min.js"></script>
+		<script src="{{ asset('frontend-assets') }}/js/jquery.zoom.min.js"></script>
+		<script src="{{ asset('frontend-assets') }}/js/main.js"></script>
+		<script src="{{ asset('frontend-assets') }}/js/cart.js"></script>

@@ -10,7 +10,7 @@
 					</ul>
 					<ul class="header-links pull-right">
 						<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
-						<li><a href="#"><i class="fa fa-user-o"></i> My Account</a></li>
+						<li><a href="#"><i class="fa fa-user-o"></i> Login / Signup</a></li>
 					</ul>
 				</div>
 			</div>
@@ -25,8 +25,8 @@
 						<!-- LOGO -->
 						<div class="col-md-3">
 							<div class="header-logo">
-								<a href="index.html" class="logo">
-									<img src="{{ asset('assets') }}/img/logo.png" alt="">
+								<a href="{{ route('home') }}" class="logo">
+									<img src="{{ asset('frontend-assets') }}/img/logo.png" alt="">
 								</a>
 							</div>
 						</div>
@@ -80,7 +80,7 @@
 										<div class="cart-list">
 											<div class="product-widget">
 												<div class="product-img">
-													<img src="{{ asset('assets') }}/img/product01.png" alt="">
+													<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="">
 												</div>
 												<div class="product-body">
 													<h3 class="product-name"><a href="#">product name goes here</a></h3>
@@ -91,7 +91,7 @@
 
 											<div class="product-widget">
 												<div class="product-img">
-													<img src="{{ asset('assets') }}/img/product02.png" alt="">
+													<img src="{{ asset('frontend-assets') }}/img/product02.png" alt="">
 												</div>
 												<div class="product-body">
 													<h3 class="product-name"><a href="#">product name goes here</a></h3>
@@ -105,8 +105,8 @@
 											<h5>SUBTOTAL: $2940.00</h5>
 										</div>
 										<div class="cart-btns">
-											<a href="#">View Cart</a>
-											<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+											<a href="{{ route('store') }}">View Cart</a>
+											<a href="{{ route('checkout') }}">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
 										</div>
 									</div>
 								</div>

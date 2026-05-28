@@ -1,7 +1,8 @@
 @extends('layouts.home')
 
+@section('title', $title ?? 'Home')
 
 @section('content')
-    <p>This is my body content. {{  $message    }}</p>
+    @include('front.collections')
+    @include('front.slider')
 @endsection
-

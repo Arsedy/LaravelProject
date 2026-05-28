@@ -31,7 +31,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="{{ asset('assets') }}/img/product01.png" alt="MacBook Pro 16-inch M3">
+												<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="MacBook Pro 16-inch M3">
 												<div class="product-label">
 													<span class="sale">-10%</span>
 													<span class="new">NEW</span>
@@ -39,7 +39,7 @@
 											</div>
 											<div class="product-body">
 												<p class="product-category">Laptops</p>
-												<h3 class="product-name"><a href="product.html">MacBook Pro 16-inch M3</a></h3>
+												<h3 class="product-name"><a href="{{ route('product') }}">MacBook Pro 16-inch M3</a></h3>
 												<h4 class="product-price">$1999.00 <del class="product-old-price">$2199.00</del></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
@@ -63,14 +63,14 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="{{ asset('assets') }}/img/product02.png" alt="Sony WH-1000XM5 Headphones">
+												<img src="{{ asset('frontend-assets') }}/img/product02.png" alt="Sony WH-1000XM5 Headphones">
 												<div class="product-label">
 													<span class="new">NEW</span>
 												</div>
 											</div>
 											<div class="product-body">
 												<p class="product-category">Headphones</p>
-												<h3 class="product-name"><a href="product.html">Sony WH-1000XM5 Headphones</a></h3>
+												<h3 class="product-name"><a href="{{ route('product') }}">Sony WH-1000XM5 Headphones</a></h3>
 												<h4 class="product-price">$349.00 <del class="product-old-price">$399.00</del></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
@@ -94,14 +94,14 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="{{ asset('assets') }}/img/product03.png" alt="ASUS ROG Zephyrus G14">
+												<img src="{{ asset('frontend-assets') }}/img/product03.png" alt="ASUS ROG Zephyrus G14">
 												<div class="product-label">
 													<span class="sale">-20%</span>
 												</div>
 											</div>
 											<div class="product-body">
 												<p class="product-category">Laptops</p>
-												<h3 class="product-name"><a href="product.html">ASUS ROG Zephyrus G14</a></h3>
+												<h3 class="product-name"><a href="{{ route('product') }}">ASUS ROG Zephyrus G14</a></h3>
 												<h4 class="product-price">$1399.00 <del class="product-old-price">$1599.00</del></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
@@ -125,11 +125,11 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="{{ asset('assets') }}/img/product04.png" alt="iPad Pro 11-inch M2">
+												<img src="{{ asset('frontend-assets') }}/img/product04.png" alt="iPad Pro 11-inch M2">
 											</div>
 											<div class="product-body">
 												<p class="product-category">Tablets</p>
-												<h3 class="product-name"><a href="product.html">iPad Pro 11-inch M2</a></h3>
+												<h3 class="product-name"><a href="{{ route('product') }}">iPad Pro 11-inch M2</a></h3>
 												<h4 class="product-price">$799.00 <del class="product-old-price">$849.00</del></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
@@ -153,11 +153,11 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="{{ asset('assets') }}/img/product05.png" alt="Logitech MX Master 3S">
+												<img src="{{ asset('frontend-assets') }}/img/product05.png" alt="Logitech MX Master 3S">
 											</div>
 											<div class="product-body">
 												<p class="product-category">Accessories</p>
-												<h3 class="product-name"><a href="product.html">Logitech MX Master 3S</a></h3>
+												<h3 class="product-name"><a href="{{ route('product') }}">Logitech MX Master 3S</a></h3>
 												<h4 class="product-price">$99.00 <del class="product-old-price">$109.00</del></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
@@ -271,7 +271,7 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="{{ asset('assets') }}/img/product06.png" alt="Samsung Galaxy S23 Ultra">
+												<img src="{{ asset('frontend-assets') }}/img/product06.png" alt="Samsung Galaxy S23 Ultra">
 												<div class="product-label">
 													<span class="sale">-10%</span>
 													<span class="new">NEW</span>
@@ -279,7 +279,7 @@
 											</div>
 											<div class="product-body">
 												<p class="product-category">Smartphones</p>
-												<h3 class="product-name"><a href="product.html">Samsung Galaxy S23 Ultra</a></h3>
+												<h3 class="product-name"><a href="{{ route('product') }}">Samsung Galaxy S23 Ultra</a></h3>
 												<h4 class="product-price">$1199.00 <del class="product-old-price">$1299.00</del></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
@@ -303,14 +303,14 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="{{ asset('assets') }}/img/product07.png" alt="Dell XPS 13 Plus">
+												<img src="{{ asset('frontend-assets') }}/img/product07.png" alt="Dell XPS 13 Plus">
 												<div class="product-label">
 													<span class="new">NEW</span>
 												</div>
 											</div>
 											<div class="product-body">
 												<p class="product-category">Laptops</p>
-												<h3 class="product-name"><a href="product.html">Dell XPS 13 Plus</a></h3>
+												<h3 class="product-name"><a href="{{ route('product') }}">Dell XPS 13 Plus</a></h3>
 												<h4 class="product-price">$999.00 <del class="product-old-price">$1099.00</del></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
@@ -334,14 +334,14 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="{{ asset('assets') }}/img/product08.png" alt="Sony Alpha 7 IV Camera">
+												<img src="{{ asset('frontend-assets') }}/img/product08.png" alt="Sony Alpha 7 IV Camera">
 												<div class="product-label">
 													<span class="sale">-5%</span>
 												</div>
 											</div>
 											<div class="product-body">
 												<p class="product-category">Cameras</p>
-												<h3 class="product-name"><a href="product.html">Sony Alpha 7 IV Camera</a></h3>
+												<h3 class="product-name"><a href="{{ route('product') }}">Sony Alpha 7 IV Camera</a></h3>
 												<h4 class="product-price">$2199.00 <del class="product-old-price">$2299.00</del></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
@@ -365,11 +365,11 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="{{ asset('assets') }}/img/product09.png" alt="iPhone 15 Pro">
+												<img src="{{ asset('frontend-assets') }}/img/product09.png" alt="iPhone 15 Pro">
 											</div>
 											<div class="product-body">
 												<p class="product-category">Smartphones</p>
-												<h3 class="product-name"><a href="product.html">iPhone 15 Pro</a></h3>
+												<h3 class="product-name"><a href="{{ route('product') }}">iPhone 15 Pro</a></h3>
 												<h4 class="product-price">$999.00 <del class="product-old-price">$1099.00</del></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
@@ -393,11 +393,11 @@
 										<!-- product -->
 										<div class="product">
 											<div class="product-img">
-												<img src="{{ asset('assets') }}/img/product01.png" alt="HP Spectre x360">
+												<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="HP Spectre x360">
 											</div>
 											<div class="product-body">
 												<p class="product-category">Laptops</p>
-												<h3 class="product-name"><a href="product.html">HP Spectre x360</a></h3>
+												<h3 class="product-name"><a href="{{ route('product') }}">HP Spectre x360</a></h3>
 												<h4 class="product-price">$1149.00 <del class="product-old-price">$1249.00</del></h4>
 												<div class="product-rating">
 													<i class="fa fa-star"></i>
@@ -451,7 +451,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product07.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product07.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -464,7 +464,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product08.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product08.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -477,7 +477,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product09.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product09.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -492,7 +492,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product01.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -505,7 +505,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product02.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product02.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -518,7 +518,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product03.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product03.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -544,7 +544,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product04.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product04.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -557,7 +557,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product05.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product05.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -570,7 +570,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product06.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product06.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -585,7 +585,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product07.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product07.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -598,7 +598,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product08.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product08.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -611,7 +611,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product09.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product09.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -639,7 +639,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product01.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -652,7 +652,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product02.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product02.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -665,7 +665,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product03.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product03.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -680,7 +680,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product04.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product04.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -693,7 +693,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product05.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product05.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>
@@ -706,7 +706,7 @@
 								<!-- product widget -->
 								<div class="product-widget">
 									<div class="product-img">
-										<img src="{{ asset('assets') }}/img/product06.png" alt="">
+										<img src="{{ asset('frontend-assets') }}/img/product06.png" alt="">
 									</div>
 									<div class="product-body">
 										<p class="product-category">Category</p>

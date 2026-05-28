@@ -6,13 +6,13 @@
 				<div id="responsive-nav">
 					<!-- NAV -->
 					<ul class="main-nav nav navbar-nav">
-						<li class="active"><a href="index.html">Home</a></li>
-						<li><a href="store.html">Hot Deals</a></li>
-						<li><a href="#">Categories</a></li>
-						<li><a href="#">Laptops</a></li>
-						<li><a href="#">Smartphones</a></li>
-						<li><a href="#">Cameras</a></li>
-						<li><a href="#">Accessories</a></li>
+						<li class="{{ Route::currentRouteName() == 'home' ? 'active' : '' }}"><a href="{{ route('home') }}">Home</a></li>
+						<li class="{{ Route::currentRouteName() == 'store' ? 'active' : '' }}"><a href="{{ route('store') }}">Hot Deals</a></li>
+						<li><a href="{{ route('store') }}">Categories</a></li>
+						<li><a href="{{ route('store') }}">Laptops</a></li>
+						<li><a href="{{ route('store') }}">Smartphones</a></li>
+						<li><a href="{{ route('store') }}">Cameras</a></li>
+						<li><a href="{{ route('store') }}">Accessories</a></li>
 					</ul>
 					<!-- /NAV -->
 				</div>

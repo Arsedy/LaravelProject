@@ -193,9 +193,11 @@ $(document).ready(function() {
                 'pointer-events': 'auto',
                 'opacity': '1'
             });
-            // Point the buttons to checkout.html
-            $('.header-ctn .dropdown:has(.fa-shopping-cart) .cart-btns a:first-child').attr('href', 'checkout.html'); // View Cart goes to checkout too
-            $('.header-ctn .dropdown:has(.fa-shopping-cart) .cart-btns a:last-child').attr('href', 'checkout.html');  // Checkout
+            // Point the buttons to correct routes
+            const checkoutUrl = window.Laravel ? window.Laravel.routes.checkout : 'checkout';
+            const storeUrl = window.Laravel ? window.Laravel.routes.store : 'store';
+            $('.header-ctn .dropdown:has(.fa-shopping-cart) .cart-btns a:first-child').attr('href', storeUrl); // View Cart goes to store
+            $('.header-ctn .dropdown:has(.fa-shopping-cart) .cart-btns a:last-child').attr('href', checkoutUrl);  // Checkout
         }
     }
 
@@ -495,7 +497,7 @@ $(document).ready(function() {
     });
 
     // Specifically handle delete inside wishlist dropdown container
-    $('#wishlist-dropdown-container').on('click', '.delete-wishlist-item', function(e) {
+    $('#wishlist-dropdown').on('click', '.delete-wishlist-item', function(e) {
         e.preventDefault();
         e.stopPropagation();
         const name = $(this).attr('data-name');
@@ -503,7 +505,7 @@ $(document).ready(function() {
     });
 
     // Clear Wishlist button click inside container
-    $('#wishlist-dropdown-container').on('click', '#clear-wishlist', function(e) {
+    $('#wishlist-dropdown').on('click', '#clear-wishlist', function(e) {
         e.preventDefault();
         e.stopPropagation();
         saveWishlist([]);
@@ -511,7 +513,7 @@ $(document).ready(function() {
     });
 
     // Add to Cart from Wishlist Dropdown inside container
-    $('#wishlist-dropdown-container').on('click', '.add-wishlist-to-cart', function(e) {
+    $('#wishlist-dropdown').on('click', '.add-wishlist-to-cart', function(e) {
         e.preventDefault();
         e.stopPropagation();
 
@@ -549,13 +551,14 @@ $(document).ready(function() {
         $orderProducts.empty();
 
         if (cart.length === 0) {
+            const storeUrl = window.Laravel ? window.Laravel.routes.store : 'store';
             // Display empty cart notice on checkout page
             $orderProducts.html(`
                 <div class="empty-cart-message">
                     <i class="fa fa-shopping-cart"></i>
                     <h4>Your Cart is Empty</h4>
                     <p>Add some products to your cart before checking out.</p>
-                    <a href="store.html" class="primary-btn">Go to Store</a>
+                    <a href="${storeUrl}" class="primary-btn">Go to Store</a>
                 </div>
             `);
             
@@ -745,6 +748,8 @@ $(document).ready(function() {
             $('#order-success-overlay').addClass('show');
         }, 50);
 
+        const homeUrl = window.Laravel ? window.Laravel.routes.home : '/home';
+
         // Redirect countdown
         let seconds = 5;
         const intervalId = setInterval(() => {
@@ -752,14 +757,14 @@ $(document).ready(function() {
             $('#redirect-countdown').text(seconds);
             if (seconds <= 0) {
                 clearInterval(intervalId);
-                window.location.href = 'index.html';
+                window.location.href = homeUrl;
             }
         }, 1000);
 
         // Button redirect
         $('#btn-continue-shopping').on('click', function() {
             clearInterval(intervalId);
-            window.location.href = 'index.html';
+            window.location.href = homeUrl;
         });
     }
 
