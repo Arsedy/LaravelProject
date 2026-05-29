@@ -30,9 +30,4 @@ class HomeController extends Controller
     {
         return view('front.blank');
     }
-
-    public function admin(): View
-    {
-        return view('admin.home');
-    }
 }
