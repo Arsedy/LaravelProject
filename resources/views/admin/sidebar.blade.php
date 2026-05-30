@@ -12,7 +12,7 @@
       />
       <!--end::Brand Image-->
       <!--begin::Brand Text-->
-      <span class="brand-text fw-light">AdminLTE 4</span>
+      <span class="brand-text fw-bold text-white">Admin Panel</span>
       <!--end::Brand Text-->
     </a>
     <!--end::Brand Link-->
@@ -64,6 +64,12 @@
           <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
             <i class="nav-icon bi bi-tags-fill"></i>
             <p>Categories</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('admin.products.index') }}" class="nav-link {{ request()->routeIs('admin.products.*') ? 'active' : '' }}">
+            <i class="nav-icon bi bi-box-seam-fill"></i>
+            <p>Products</p>
           </a>
         </li>
         <li class="nav-item">

@@ -23,7 +23,7 @@ Follow these steps to get the project running on your local machine:
 
 1. **Clone the repository** (if you haven't already):
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Arsedy/LaravelProject
    cd LaravelProject
    ```
 
