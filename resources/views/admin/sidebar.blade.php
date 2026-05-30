@@ -3,7 +3,7 @@
   <!--begin::Sidebar Brand-->
   <div class="sidebar-brand">
     <!--begin::Brand Link-->
-    <a href="#" class="brand-link">
+    <a href="{{ route('admin.home') }}" class="brand-link">
       <!--begin::Brand Image-->
       <img
         src="{{ asset('admin-assets/assets/img/AdminLTELogo.png') }}"
@@ -31,8 +31,8 @@
         data-accordion="false"
         id="navigation"
       >
-        <li class="nav-item menu-open">
-          <a href="#" class="nav-link active">
+        <li class="nav-item {{ request()->routeIs('admin.home') ? 'menu-open' : '' }}">
+          <a href="#" class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}">
             <i class="nav-icon bi bi-speedometer"></i>
             <p>
               Dashboard
@@ -41,7 +41,7 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="#" class="nav-link active">
+              <a href="{{ route('admin.home') }}" class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Dashboard v1</p>
               </a>
@@ -59,6 +59,12 @@
               </a>
             </li>
           </ul>
+        </li>
+        <li class="nav-item">
+          <a href="{{ route('admin.categories.index') }}" class="nav-link {{ request()->routeIs('admin.categories.*') ? 'active' : '' }}">
+            <i class="nav-icon bi bi-tags-fill"></i>
+            <p>Categories</p>
+          </a>
         </li>
         <li class="nav-item">
           <a href="#" class="nav-link">
