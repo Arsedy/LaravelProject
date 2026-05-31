@@ -19,6 +19,7 @@ class Product extends Model
      */
     protected $fillable = [
         'category_id',
+        'user_id',
         'title',
         'keywords',
         'description',
@@ -50,5 +51,13 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Get the user that owns the product.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

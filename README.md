@@ -85,6 +85,13 @@ npm run dev:full
 
 This command starts Laravel on `http://127.0.0.1:8000` and Vite at the same time, so you only need one terminal to launch both.
 
+## 🔐 Admin Panel Access
+
+To access the administrative panel of the application:
+- **URL**: `http://localhost:8000/admin`
+- **Email**: `admin@mysite.com`
+- **Password**: `12345`
+
 ## 🧪 Testing
 
 To run the test suite and ensure everything is working correctly, you can use Pest (or PHPUnit):

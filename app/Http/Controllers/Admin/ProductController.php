@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
@@ -69,6 +70,8 @@ class ProductController extends Controller
             $validated['image'] = 'uploads/products/'.$filename;
         }
 
+        $validated['user_id'] = Auth::id();
+
         Product::create($validated);
 
         return redirect()
@@ -124,6 +127,8 @@ class ProductController extends Controller
             $file->move(public_path('uploads/products'), $filename);
             $validated['image'] = 'uploads/products/'.$filename;
         }
+
+        $validated['user_id'] = Auth::id();
 
         $product->update($validated);
 

@@ -2,6 +2,8 @@
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
@@ -10,6 +12,12 @@ uses(RefreshDatabase::class);
 
 beforeEach(function () {
     File::deleteDirectory(public_path('uploads/products'));
+
+    // Create admin role and user
+    $adminRole = Role::create(['name' => 'admin', 'description' => 'Admin Role']);
+    $this->admin = User::factory()->create();
+    $this->admin->roles()->attach($adminRole);
+    $this->actingAs($this->admin);
 });
 
 afterAll(function () {
