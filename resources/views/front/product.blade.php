@@ -35,19 +35,11 @@
 					<div class="col-md-5 col-md-push-2">
 						<div id="product-main-img">
 							<div class="product-preview">
-								<img src="{{ asset('frontend-assets') }}/img/product02.png" alt="Sony WH-1000XM5 Headphones">
-							</div>
-
-							<div class="product-preview">
-								<img src="{{ asset('frontend-assets') }}/img/product03.png" alt="">
-							</div>
-
-							<div class="product-preview">
-								<img src="{{ asset('frontend-assets') }}/img/product06.png" alt="">
-							</div>
-
-							<div class="product-preview">
-								<img src="{{ asset('frontend-assets') }}/img/product08.png" alt="">
+								@if($product->image)
+									<img src="{{ asset($product->image) }}" alt="{{ $product->title }}">
+								@else
+									<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="{{ $product->title }}">
+								@endif
 							</div>
 						</div>
 					</div>
@@ -57,19 +49,11 @@
 					<div class="col-md-2  col-md-pull-5">
 						<div id="product-imgs">
 							<div class="product-preview">
-								<img src="{{ asset('frontend-assets') }}/img/product02.png" alt="Sony WH-1000XM5 Headphones">
-							</div>
-
-							<div class="product-preview">
-								<img src="{{ asset('frontend-assets') }}/img/product03.png" alt="">
-							</div>
-
-							<div class="product-preview">
-								<img src="{{ asset('frontend-assets') }}/img/product06.png" alt="">
-							</div>
-
-							<div class="product-preview">
-								<img src="{{ asset('frontend-assets') }}/img/product08.png" alt="">
+								@if($product->image)
+									<img src="{{ asset($product->image) }}" alt="{{ $product->title }}">
+								@else
+									<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="{{ $product->title }}">
+								@endif
 							</div>
 						</div>
 					</div>
@@ -78,49 +62,51 @@
 					<!-- Product details -->
 					<div class="col-md-5">
 						<div class="product-details">
-							<h2 class="product-name">Sony WH-1000XM5 Headphones</h2>
+							<h2 class="product-name">{{ $product->title }}</h2>
 							<div>
 								<div class="product-rating">
 									<i class="fa fa-star"></i>
 									<i class="fa fa-star"></i>
 									<i class="fa fa-star"></i>
 									<i class="fa fa-star"></i>
-									<i class="fa fa-star-o"></i>
+									<i class="fa fa-star"></i>
 								</div>
 								<a class="review-link" href="#">10 Review(s) | Add your review</a>
 							</div>
 							<div>
-								<h3 class="product-price">$349.00 <del class="product-old-price">$399.00</del></h3>
-								<span class="product-available">In Stock</span>
+								@if($product->discount > 0)
+									@php
+										$discountedPrice = $product->price - ($product->price * ($product->discount / 100));
+									@endphp
+									<h3 class="product-price">${{ number_format($discountedPrice, 2) }} <del class="product-old-price">${{ number_format($product->price, 2) }}</del></h3>
+								@else
+									<h3 class="product-price">${{ number_format($product->price, 2) }}</h3>
+								@endif
+								
+								@if($product->stock > 0)
+									<span class="product-available text-success">In Stock ({{ $product->stock }} left)</span>
+								@else
+									<span class="product-available text-danger">Out of Stock</span>
+								@endif
 							</div>
-							<p>Industry-leading noise cancellation, exceptional sound quality, and crystal-clear calls. Designed with a lightweight headband and soft-fit leather earcups for maximum comfort.</p>
+							<p>{{ $product->description }}</p>
 
-							<div class="product-options">
-								<label>
-									Size
-									<select class="input-select">
-										<option value="0">X</option>
-									</select>
-								</label>
-								<label>
-									Color
-									<select class="input-select">
-										<option value="0">Red</option>
-									</select>
-								</label>
-							</div>
-
-							<div class="add-to-cart">
+							<form action="{{ route('checkout') }}" method="GET" class="add-to-cart" style="margin-top: 30px; margin-bottom: 30px;">
+								<input type="hidden" name="product_id" value="{{ $product->id }}">
 								<div class="qty-label">
 									Qty
 									<div class="input-number">
-										<input type="number" value="1">
+										<input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}">
 										<span class="qty-up">+</span>
 										<span class="qty-down">-</span>
 									</div>
 								</div>
-								<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-							</div>
+								@if($product->stock > 0)
+									<button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+								@else
+									<button type="button" class="add-to-cart-btn" disabled><i class="fa fa-shopping-cart"></i> Out of Stock</button>
+								@endif
+							</form>
 
 							<ul class="product-btns">
 								<li><a href="#"><i class="fa fa-heart-o"></i> add to wishlist</a></li>
@@ -129,18 +115,8 @@
 
 							<ul class="product-links">
 								<li>Category:</li>
-								<li><a href="{{ route('store') }}">Headphones</a></li>
-								<li><a href="{{ route('store') }}">Accessories</a></li>
+								<li><a href="{{ route('store') }}">{{ $product->category->title ?? 'General' }}</a></li>
 							</ul>
-
-							<ul class="product-links">
-								<li>Share:</li>
-								<li><a href="#"><i class="fa fa-facebook"></i></a></li>
-								<li><a href="#"><i class="fa fa-twitter"></i></a></li>
-								<li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-								<li><a href="#"><i class="fa fa-envelope"></i></a></li>
-							</ul>
-
 						</div>
 					</div>
 					<!-- /Product details -->
@@ -162,7 +138,7 @@
 								<div id="tab1" class="tab-pane fade in active">
 									<div class="row">
 										<div class="col-md-12">
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+											<p>{{ $product->description }}</p>
 										</div>
 									</div>
 								</div>
@@ -172,7 +148,7 @@
 								<div id="tab2" class="tab-pane fade in">
 									<div class="row">
 										<div class="col-md-12">
-											<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+											<p>{{ $product->detail ?? $product->description }}</p>
 										</div>
 									</div>
 								</div>

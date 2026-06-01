@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -64,6 +65,13 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        // Automatically assign 'user' role to newly registered users
+        $userRole = Role::firstOrCreate(
+            ['name' => 'user'],
+            ['description' => 'Regular user role']
+        );
+        $user->roles()->attach($userRole->id);
 
         Auth::login($user);
 

@@ -41,6 +41,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the orders placed by the user.
+     */
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    /**
      * Get the roles associated with the user.
      */
     public function roles(): BelongsToMany

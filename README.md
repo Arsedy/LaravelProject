@@ -92,6 +92,63 @@ To access the administrative panel of the application:
 - **Email**: `admin@mysite.com`
 - **Password**: `12345`
 
+## 🔄 Application Workflow Tutorial (Pipeline)
+
+This section describes the core e-commerce workflow pipelines integrated into the application, focusing on how Users, Roles, Products, and Orders interact.
+
+```mermaid
+graph TD
+    A[Visitor / Guest] -->|Registers| B[User Account]
+    A -->|Views Store| C[Product Detail]
+    B -->|Logs In| D[Authenticated User]
+    
+    C -->|Add to Cart| E[Checkout Form]
+    D -->|Autofills Name/Email| E
+    
+    E -->|Places Order| F[Order Pending]
+    F -->|Decrements Stock| G[Product Inventory]
+    
+    H[Admin User] -->|Logs into Admin Panel| I[Admin Dashboard]
+    I -->|Manage Users/Roles| J[Sync Roles: User <-> Admin]
+    I -->|Manage Products| K[Create/Edit Products]
+    I -->|Manage Orders| L[Update Order Status: Pending/Processing/Completed/Canceled]
+```
+
+### 1. User & Role Management Pipeline
+1. **User Registration:** Guests register at `/register` to become a standard customer (`user` role).
+2. **Admin Verification & Assignment:**
+   - Log in as the default Admin (`admin@mysite.com` / `12345`) at `/login`.
+   - Navigate to `/admin/users` to view the list of all registered users.
+   - Click **Edit** on a user to toggle their roles (e.g., check `admin` to promote a user to administrator).
+   - *Security Guard:* Administrators are blocked from deleting their own active profile.
+
+### 2. Product Management Pipeline
+1. **Automatic Seeding:** The application seeds 9 default items (Laptops, Headphones, Cameras, etc.) during `php artisan migrate` so the store is instantly populated.
+2. **Admin Controls:**
+   - Admins navigate to `/admin/products`.
+   - Click **Add Product** to specify Title, Category, Price, Stock, Discount percentage, and upload a custom image.
+   - Updates to stock or prices are reflected instantly across the frontend.
+
+### 3. Shopping & Checkout Pipeline (User / Guest)
+1. **Product Selection:**
+   - Visit the storefront `/store`.
+   - Click on any product title to view its details (`/product?product_id=X`), select a quantity, and click **Add to Cart**.
+2. **Checkout Processing:**
+   - On `/checkout`, the billing details form requires only: **Name**, **Email**, **Address**, and **Telephone** (removed zip-code, city, and country).
+   - If the user is logged in, their name and email are **automatically pre-filled**.
+   - The order summary calculates discount reductions and Unit Price × Quantity totals dynamically.
+3. **Database Transaction & Stock Update:**
+   - On submission, the order is registered under the user's ID (or `null` if guest checkout).
+   - The product's inventory stock is **automatically decremented** by the ordered quantity inside a database transaction to prevent race conditions.
+   - Out-of-stock items block placement and return appropriate notifications.
+
+### 4. Order Management Pipeline (Admin)
+1. **Order Reception:** Admins visit `/admin/orders` to view all new e-commerce requests.
+2. **Status Progression:**
+   - Click **View Details** on an order to inspect customer info and the specific product breakdown.
+   - Use the status dropdown to update the progress: `Pending` ➡️ `Processing` ➡️ `Completed` (or `Canceled`).
+   - Saving updates status changes instantly.
+
 ## 🧪 Testing
 
 To run the test suite and ensure everything is working correctly, you can use Pest (or PHPUnit):

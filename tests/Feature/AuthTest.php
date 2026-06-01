@@ -35,6 +35,9 @@ test('user can register successfully', function () {
     ]);
     $this->assertTrue(auth()->check());
     $this->assertEquals('John Doe', auth()->user()->name);
+
+    $user = User::where('email', 'john@example.com')->first();
+    $this->assertTrue($user->hasRole('user'));
 });
 
 test('registration requires valid input', function () {

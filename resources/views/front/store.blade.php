@@ -240,307 +240,70 @@
 
 						<!-- store products -->
 						<div class="row">
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="MacBook Pro 16-inch M3">
-										<div class="product-label">
-											<span class="sale">-10%</span>
-											<span class="new">NEW</span>
+							@forelse($products as $product)
+								<!-- product -->
+								<div class="col-md-4 col-xs-6" style="margin-bottom: 30px; height: 450px;">
+									<div class="product">
+										<div class="product-img">
+											@if($product->image)
+												<img src="{{ asset($product->image) }}" alt="{{ $product->title }}" style="height: 180px; width: 100%; object-fit: cover;">
+											@else
+												<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="{{ $product->title }}" style="height: 180px; width: 100%; object-fit: cover;">
+											@endif
+											<div class="product-label">
+												@if($product->discount > 0)
+													<span class="sale">-{{ round($product->discount) }}%</span>
+												@endif
+												@if($product->created_at->gt(now()->subDays(7)))
+													<span class="new">NEW</span>
+												@endif
+											</div>
 										</div>
-									</div>
-									<div class="product-body">
-										<p class="product-category">Laptops</p>
-										<h3 class="product-name"><a href="{{ route('product') }}">MacBook Pro 16-inch M3</a></h3>
-										<h4 class="product-price">$1999.00 <del class="product-old-price">$2199.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
+										<div class="product-body">
+											<p class="product-category">{{ $product->category->title ?? 'General' }}</p>
+											<h3 class="product-name" style="height: 40px; overflow: hidden;"><a href="{{ route('checkout', ['product_id' => $product->id]) }}">{{ $product->title }}</a></h3>
+											@if($product->discount > 0)
+												@php
+													$discountedPrice = $product->price - ($product->price * ($product->discount / 100));
+												@endphp
+												<h4 class="product-price">${{ number_format($discountedPrice, 2) }} <del class="product-old-price">${{ number_format($product->price, 2) }}</del></h4>
+											@else
+												<h4 class="product-price">${{ number_format($product->price, 2) }}</h4>
+											@endif
+											<div class="product-rating">
+												<i class="fa fa-star"></i>
+												<i class="fa fa-star"></i>
+												<i class="fa fa-star"></i>
+												<i class="fa fa-star"></i>
+												<i class="fa fa-star"></i>
+											</div>
+											<div class="product-btns">
+												<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+												<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
+												<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+											</div>
 										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+										<div class="add-to-cart">
+											<a href="{{ route('checkout', ['product_id' => $product->id]) }}" class="add-to-cart-btn" style="display: block; text-align: center; line-height: 40px;"><i class="fa fa-shopping-cart"></i> add to cart</a>
 										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
 									</div>
 								</div>
-							</div>
-							<!-- /product -->
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{{ asset('frontend-assets') }}/img/product02.png" alt="Sony WH-1000XM5 Headphones">
-										<div class="product-label">
-											<span class="new">NEW</span>
-										</div>
-									</div>
-									<div class="product-body">
-										<p class="product-category">Headphones</p>
-										<h3 class="product-name"><a href="{{ route('product') }}">Sony WH-1000XM5 Headphones</a></h3>
-										<h4 class="product-price">$349.00 <del class="product-old-price">$399.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star-o"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
+								<!-- /product -->
+							@empty
+								<div class="col-md-12 text-center" style="padding: 50px 0;">
+									<h3>No Products Found</h3>
+									<p>Please seed the database or add products from the admin panel.</p>
 								</div>
-							</div>
-							<!-- /product -->
-
-							<div class="clearfix visible-sm visible-xs"></div>
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{{ asset('frontend-assets') }}/img/product03.png" alt="ASUS ROG Zephyrus G14">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Laptops</p>
-										<h3 class="product-name"><a href="{{ route('product') }}">ASUS ROG Zephyrus G14</a></h3>
-										<h4 class="product-price">$1399.00 <del class="product-old-price">$1599.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star-o"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<div class="clearfix visible-lg visible-md"></div>
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{{ asset('frontend-assets') }}/img/product04.png" alt="iPad Pro 11-inch M2">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Tablets</p>
-										<h3 class="product-name"><a href="{{ route('product') }}">iPad Pro 11-inch M2</a></h3>
-										<h4 class="product-price">$799.00 <del class="product-old-price">$849.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<div class="clearfix visible-sm visible-xs"></div>
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{{ asset('frontend-assets') }}/img/product05.png" alt="Logitech MX Master 3S">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Accessories</p>
-										<h3 class="product-name"><a href="{{ route('product') }}">Logitech MX Master 3S</a></h3>
-										<h4 class="product-price">$99.00 <del class="product-old-price">$109.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{{ asset('frontend-assets') }}/img/product06.png" alt="Samsung Galaxy S23 Ultra">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Smartphones</p>
-										<h3 class="product-name"><a href="{{ route('product') }}">Samsung Galaxy S23 Ultra</a></h3>
-										<h4 class="product-price">$1199.00 <del class="product-old-price">$1299.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star-o"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<div class="clearfix visible-lg visible-md visible-sm visible-xs"></div>
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{{ asset('frontend-assets') }}/img/product07.png" alt="Dell XPS 13 Plus">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Laptops</p>
-										<h3 class="product-name"><a href="{{ route('product') }}">Dell XPS 13 Plus</a></h3>
-										<h4 class="product-price">$999.00 <del class="product-old-price">$1099.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{{ asset('frontend-assets') }}/img/product08.png" alt="Sony Alpha 7 IV Camera">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Cameras</p>
-										<h3 class="product-name"><a href="{{ route('product') }}">Sony Alpha 7 IV Camera</a></h3>
-										<h4 class="product-price">$2199.00 <del class="product-old-price">$2299.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star-o"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
-
-							<div class="clearfix visible-sm visible-xs"></div>
-
-							<!-- product -->
-							<div class="col-md-4 col-xs-6">
-								<div class="product">
-									<div class="product-img">
-										<img src="{{ asset('frontend-assets') }}/img/product09.png" alt="iPhone 15 Pro">
-									</div>
-									<div class="product-body">
-										<p class="product-category">Smartphones</p>
-										<h3 class="product-name"><a href="{{ route('product') }}">iPhone 15 Pro</a></h3>
-										<h4 class="product-price">$999.00 <del class="product-old-price">$1099.00</del></h4>
-										<div class="product-rating">
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star"></i>
-											<i class="fa fa-star-o"></i>
-										</div>
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
-									</div>
-									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
-									</div>
-								</div>
-							</div>
-							<!-- /product -->
+							@endforelse
 						</div>
 						<!-- /store products -->
 
 						<!-- store bottom filter -->
-						<div class="store-filter clearfix">
-							<span class="store-qty">Showing 20-100 products</span>
-							<ul class="store-pagination">
-								<li class="active">1</li>
-								<li><a href="#">2</a></li>
-								<li><a href="#">3</a></li>
-								<li><a href="#">4</a></li>
-								<li><a href="#"><i class="fa fa-angle-right"></i></a></li>
-							</ul>
-						</div>
-						<!-- /store bottom filter -->
+						@if($products->hasPages())
+							<div class="store-filter clearfix text-center">
+								{{ $products->links('pagination::bootstrap-4') }}
+							</div>
+						@endif
 					</div>
 					<!-- /STORE -->
 				</div>

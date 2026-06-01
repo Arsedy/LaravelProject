@@ -30,172 +30,113 @@
 				<!-- row -->
 				<div class="row">
 
-					<div class="col-md-7">
-						<!-- Billing Details -->
-						<div class="billing-details">
-							<div class="section-title">
-								<h3 class="title">Billing address</h3>
+				<form action="{{ route('orders.store') }}" method="POST">
+					@csrf
+					<div class="row">
+
+						<div class="col-md-7">
+							<!-- Billing Details -->
+							<div class="billing-details">
+								<div class="section-title">
+									<h3 class="title">Billing address</h3>
+								</div>
+
+								@if ($errors->any())
+									<div class="alert alert-danger" style="margin-bottom: 20px;">
+										<ul style="margin: 0; padding-left: 15px;">
+											@foreach ($errors->all() as $error)
+												<li>{{ $error }}</li>
+											@endforeach
+										</ul>
+									</div>
+								@endif
+
+								<div class="form-group">
+									<label class="control-label" for="name" style="margin-bottom: 5px; font-weight: 500;">Full Name <span class="text-danger">*</span></label>
+									<input class="input" type="text" id="name" name="name" placeholder="Full Name" value="{{ old('name', auth()->check() ? auth()->user()->name : '') }}" required>
+								</div>
+								<div class="form-group">
+									<label class="control-label" for="email" style="margin-bottom: 5px; font-weight: 500;">Email Address <span class="text-danger">*</span></label>
+									<input class="input" type="email" id="email" name="email" placeholder="Email Address" value="{{ old('email', auth()->check() ? auth()->user()->email : '') }}" required>
+								</div>
+								<div class="form-group">
+									<label class="control-label" for="address" style="margin-bottom: 5px; font-weight: 500;">Address <span class="text-danger">*</span></label>
+									<input class="input" type="text" id="address" name="address" placeholder="Delivery Address" value="{{ old('address') }}" required>
+								</div>
+								<div class="form-group">
+									<label class="control-label" for="telephone" style="margin-bottom: 5px; font-weight: 500;">Telephone <span class="text-danger">*</span></label>
+									<input class="input" type="tel" id="telephone" name="telephone" placeholder="Telephone Number" value="{{ old('telephone') }}" required>
+								</div>
 							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="first-name" placeholder="First Name">
+							<!-- /Billing Details -->
+						</div>
+
+						<!-- Order Details -->
+						<div class="col-md-5 order-details">
+							<div class="section-title text-center">
+								<h3 class="title">Your Order</h3>
 							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="last-name" placeholder="Last Name">
+							<div class="order-summary">
+								<div class="order-col">
+									<div><strong>PRODUCT</strong></div>
+									<div><strong>TOTAL</strong></div>
+								</div>
+								<div class="order-products">
+									@if(isset($product) && $product)
+										<div class="order-col">
+											<div>{{ $quantity }}x {{ $product->title }}</div>
+											<div>
+												@php
+													$unitPrice = $product->price;
+													if ($product->discount > 0) {
+														$unitPrice = $product->price - ($product->price * ($product->discount / 100));
+													}
+													$total = $unitPrice * $quantity;
+												@endphp
+												${{ number_format($total, 2) }}
+											</div>
+										</div>
+									@else
+										<div class="order-col">
+											<div>No product selected</div>
+											<div>$0.00</div>
+										</div>
+									@endif
+								</div>
+								<div class="order-col">
+									<div>Shipping</div>
+									<div><strong>FREE</strong></div>
+								</div>
+								<div class="order-col">
+									<div><strong>TOTAL</strong></div>
+									<div><strong class="order-total">${{ number_format($total ?? 0, 2) }}</strong></div>
+								</div>
 							</div>
-							<div class="form-group">
-								<input class="input" type="email" name="email" placeholder="Email">
-							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="address" placeholder="Address">
-							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="city" placeholder="City">
-							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="country" placeholder="Country">
-							</div>
-							<div class="form-group">
-								<input class="input" type="text" name="zip-code" placeholder="ZIP Code">
-							</div>
-							<div class="form-group">
-								<input class="input" type="tel" name="tel" placeholder="Telephone">
-							</div>
-							<div class="form-group">
-								<div class="input-checkbox">
-									<input type="checkbox" id="create-account">
-									<label for="create-account">
+							
+							<div class="payment-method" style="margin-top: 25px;">
+								<div class="input-radio">
+									<input type="radio" name="payment" id="payment-1" checked>
+									<label for="payment-1">
 										<span></span>
-										Create Account?
+										Cash on Delivery
 									</label>
 									<div class="caption">
-										<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
-										<input class="input" type="password" name="password" placeholder="Enter Your Password">
+										<p>Pay with cash upon delivery of your products.</p>
 									</div>
 								</div>
 							</div>
-						</div>
-						<!-- /Billing Details -->
 
-						<!-- Shiping Details -->
-						<div class="shiping-details">
-							<div class="section-title">
-								<h3 class="title">Shiping address</h3>
-							</div>
-							<div class="input-checkbox">
-								<input type="checkbox" id="shiping-address">
-								<label for="shiping-address">
-									<span></span>
-									Ship to a diffrent address?
-								</label>
-								<div class="caption">
-									<div class="form-group">
-										<input class="input" type="text" name="first-name" placeholder="First Name">
-									</div>
-									<div class="form-group">
-										<input class="input" type="text" name="last-name" placeholder="Last Name">
-									</div>
-									<div class="form-group">
-										<input class="input" type="email" name="email" placeholder="Email">
-									</div>
-									<div class="form-group">
-										<input class="input" type="text" name="address" placeholder="Address">
-									</div>
-									<div class="form-group">
-										<input class="input" type="text" name="city" placeholder="City">
-									</div>
-									<div class="form-group">
-										<input class="input" type="text" name="country" placeholder="Country">
-									</div>
-									<div class="form-group">
-										<input class="input" type="text" name="zip-code" placeholder="ZIP Code">
-									</div>
-									<div class="form-group">
-										<input class="input" type="tel" name="tel" placeholder="Telephone">
-									</div>
-								</div>
-							</div>
+							@if(isset($product) && $product)
+								<input type="hidden" name="product_id" value="{{ $product->id }}">
+								<input type="hidden" name="quantity" value="{{ $quantity }}">
+								<button type="submit" class="primary-btn order-submit" style="width: 100%; border: none;">Place order</button>
+							@else
+								<button type="button" class="primary-btn order-submit" style="width: 100%; border: none;" disabled>No Product Selected</button>
+							@endif
 						</div>
-						<!-- /Shiping Details -->
-
-						<!-- Order notes -->
-						<div class="order-notes">
-							<textarea class="input" placeholder="Order Notes"></textarea>
-						</div>
-						<!-- /Order notes -->
+						<!-- /Order Details -->
 					</div>
-
-					<!-- Order Details -->
-					<div class="col-md-5 order-details">
-						<div class="section-title text-center">
-							<h3 class="title">Your Order</h3>
-						</div>
-						<div class="order-summary">
-							<div class="order-col">
-								<div><strong>PRODUCT</strong></div>
-								<div><strong>TOTAL</strong></div>
-							</div>
-							<div class="order-products">
-								<div class="order-col">
-									<div>1x Product Name Goes Here</div>
-									<div>$980.00</div>
-								</div>
-								<div class="order-col">
-									<div>2x Product Name Goes Here</div>
-									<div>$980.00</div>
-								</div>
-							</div>
-							<div class="order-col">
-								<div>Shiping</div>
-								<div><strong>FREE</strong></div>
-							</div>
-							<div class="order-col">
-								<div><strong>TOTAL</strong></div>
-								<div><strong class="order-total">$2940.00</strong></div>
-							</div>
-						</div>
-						<div class="payment-method">
-							<div class="input-radio">
-								<input type="radio" name="payment" id="payment-1">
-								<label for="payment-1">
-									<span></span>
-									Direct Bank Transfer
-								</label>
-								<div class="caption">
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-								</div>
-							</div>
-							<div class="input-radio">
-								<input type="radio" name="payment" id="payment-2">
-								<label for="payment-2">
-									<span></span>
-									Cheque Payment
-								</label>
-								<div class="caption">
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-								</div>
-							</div>
-							<div class="input-radio">
-								<input type="radio" name="payment" id="payment-3">
-								<label for="payment-3">
-									<span></span>
-									Paypal System
-								</label>
-								<div class="caption">
-									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-								</div>
-							</div>
-						</div>
-						<div class="input-checkbox">
-							<input type="checkbox" id="terms">
-							<label for="terms">
-								<span></span>
-								I've read and accept the <a href="#">terms & conditions</a>
-							</label>
-						</div>
-						<a href="#" class="primary-btn order-submit">Place order</a>
-					</div>
-					<!-- /Order Details -->
-				</div>
+				</form>
 				<!-- /row -->
 			</div>
 			<!-- /container -->

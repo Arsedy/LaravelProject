@@ -50,6 +50,22 @@
 		@include('front.header')
 		@include('front.menu')
 
+		@if (session('success'))
+			<div class="container" style="margin-top: 15px;">
+				<div class="alert alert-success">
+					{{ session('success') }}
+				</div>
+			</div>
+		@endif
+
+		@if (session('error'))
+			<div class="container" style="margin-top: 15px;">
+				<div class="alert alert-danger">
+					{{ session('error') }}
+				</div>
+			</div>
+		@endif
+
 		@yield('content')
 
 		@include('front.newsletter')
