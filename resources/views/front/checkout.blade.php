@@ -143,3 +143,23 @@
 		</div>
 		<!-- /SECTION -->
 @endsection
+
+@section('scripts')
+<script>
+    @if(isset($product) && $product)
+		@php
+			$unitPrice = $product->price;
+			if ($product->discount > 0) {
+				$unitPrice = $product->price - ($product->price * ($product->discount / 100));
+			}
+		@endphp
+        window.checkoutProduct = {
+            id: {{ $product->id }},
+            title: {!! json_encode($product->title) !!},
+            price: {{ $unitPrice }},
+            image: "{{ $product->image ? asset($product->image) : asset('frontend-assets/img/product01.png') }}",
+            quantity: {{ $quantity }}
+        };
+    @endif
+</script>
+@endsection

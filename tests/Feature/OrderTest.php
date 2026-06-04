@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
@@ -9,139 +10,166 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
+    $this->user = User::factory()->create();
     $this->category = Category::factory()->create();
     $this->product = Product::factory()->create([
         'category_id' => $this->category->id,
         'price' => 100.00,
-        'discount' => 10.00, // 10% discount -> unit price 90.00
+        'discount' => 10.00, // 90.00 price
         'stock' => 5,
     ]);
 });
 
-test('checkout page loads with a default product when no product_id is provided', function () {
-    $response = $this->get(route('checkout'));
-
-    $response->assertStatus(200);
-    $response->assertSee($this->product->title);
+test('guest is redirected to login when accessing cart or checkout', function () {
+    $this->get(route('cart.index'))->assertRedirect(route('login'));
+    $this->get(route('checkout'))->assertRedirect(route('login'));
 });
 
-test('checkout page loads with the specified product and quantity', function () {
-    $otherProduct = Product::factory()->create([
-        'category_id' => $this->category->id,
-        'title' => 'Specific Tablet',
-        'price' => 200.00,
-        'discount' => 0.00,
-    ]);
-
-    $response = $this->get(route('checkout', ['product_id' => $otherProduct->id, 'quantity' => 2]));
-
-    $response->assertStatus(200);
-    $response->assertSee('Specific Tablet');
-    $response->assertSee('2x Specific Tablet');
-    $response->assertSee('$400.00'); // 2 * 200.00 = 400.00
-});
-
-test('guest can successfully place an order', function () {
-    $response = $this->post(route('orders.store'), [
-        'name' => 'Guest Customer',
-        'email' => 'guest@example.com',
-        'address' => '123 Fake Street',
-        'telephone' => '555-1234',
-        'product_id' => $this->product->id,
+test('user can add product to database cart', function () {
+    $response = $this->actingAs($this->user)->post(route('cart.add', $this->product->id), [
         'quantity' => 2,
     ]);
 
-    $response->assertRedirect(route('home'));
-    $response->assertSessionHas('success');
-
-    // Expected total: (100.00 - 10.00) * 2 = 180.00
-    $this->assertDatabaseHas('orders', [
-        'user_id' => null,
+    $response->assertRedirect(route('cart.index'));
+    $this->assertDatabaseHas('carts', [
+        'user_id' => $this->user->id,
         'product_id' => $this->product->id,
-        'name' => 'Guest Customer',
-        'email' => 'guest@example.com',
-        'address' => '123 Fake Street',
-        'telephone' => '555-1234',
         'quantity' => 2,
-        'total' => 180.00,
-        'status' => 'pending',
-    ]);
-
-    // Product stock should decrement: 5 - 2 = 3
-    $this->product->refresh();
-    expect($this->product->stock)->toBe(3);
-});
-
-test('authenticated user can successfully place an order', function () {
-    $user = User::factory()->create([
-        'name' => 'Auth Customer',
-        'email' => 'auth@example.com',
-    ]);
-
-    // Check if name and email are pre-filled on checkout page
-    $viewResponse = $this->actingAs($user)->get(route('checkout', ['product_id' => $this->product->id]));
-    $viewResponse->assertStatus(200);
-    $viewResponse->assertSee('value="Auth Customer"', false);
-    $viewResponse->assertSee('value="auth@example.com"', false);
-
-    // Place order
-    $response = $this->actingAs($user)->post(route('orders.store'), [
-        'name' => 'Auth Customer',
-        'email' => 'auth@example.com',
-        'address' => '456 User Lane',
-        'telephone' => '555-9876',
-        'product_id' => $this->product->id,
-        'quantity' => 1,
-    ]);
-
-    $response->assertRedirect(route('home'));
-    $response->assertSessionHas('success');
-
-    $this->assertDatabaseHas('orders', [
-        'user_id' => $user->id,
-        'product_id' => $this->product->id,
-        'name' => 'Auth Customer',
-        'email' => 'auth@example.com',
-        'address' => '456 User Lane',
-        'telephone' => '555-9876',
-        'quantity' => 1,
-        'total' => 90.00,
-        'status' => 'pending',
+        'price' => 90.00,
     ]);
 });
 
-test('order placement fails if requested quantity exceeds product stock', function () {
-    $response = $this->post(route('orders.store'), [
-        'name' => 'Test Customer',
-        'email' => 'test@example.com',
-        'address' => 'Test Address',
-        'telephone' => '555-0000',
-        'product_id' => $this->product->id,
+test('user cannot add product to cart if quantity exceeds stock', function () {
+    $response = $this->actingAs($this->user)->post(route('cart.add', $this->product->id), [
         'quantity' => 6, // Stock is 5
     ]);
 
-    $response->assertRedirect();
     $response->assertSessionHas('error');
-
-    // Confirm order was not created
-    $this->assertDatabaseMissing('orders', [
-        'name' => 'Test Customer',
+    $this->assertDatabaseMissing('carts', [
+        'user_id' => $this->user->id,
     ]);
-
-    // Confirm stock remained the same
-    $this->product->refresh();
-    expect($this->product->stock)->toBe(5);
 });
 
-test('validation errors are caught when placing order', function () {
-    $response = $this->post(route('orders.store'), [
-        'name' => '', // Required
-        'email' => 'not-an-email', // Email validation
-        'address' => 'Address',
-        'telephone' => '555-1234',
-        'product_id' => 9999, // Non-existent product
-        'quantity' => 0, // Min 1
+test('user can update cart item quantity', function () {
+    $cart = Cart::create([
+        'user_id' => $this->user->id,
+        'product_id' => $this->product->id,
+        'quantity' => 1,
+        'price' => 90.00,
     ]);
 
-    $response->assertSessionHasErrors(['name', 'email', 'product_id', 'quantity']);
+    $response = $this->actingAs($this->user)->post(route('cart.update', $cart->id), [
+        'quantity' => 3,
+    ]);
+
+    $response->assertSessionHas('success');
+    expect($cart->fresh()->quantity)->toBe(3);
+});
+
+test('user can remove product from database cart', function () {
+    $cart = Cart::create([
+        'user_id' => $this->user->id,
+        'product_id' => $this->product->id,
+        'quantity' => 1,
+        'price' => 90.00,
+    ]);
+
+    $response = $this->actingAs($this->user)->delete(route('cart.remove', $cart->id));
+
+    $response->assertSessionHas('success');
+    $this->assertDatabaseMissing('carts', [
+        'id' => $cart->id,
+    ]);
+});
+
+test('checkout page loads with user cart items', function () {
+    Cart::create([
+        'user_id' => $this->user->id,
+        'product_id' => $this->product->id,
+        'quantity' => 2,
+        'price' => 90.00,
+    ]);
+
+    $response = $this->actingAs($this->user)->get(route('checkout'));
+
+    $response->assertStatus(200);
+    $response->assertSee($this->product->title);
+    $response->assertSee('$180.00'); // 90 * 2 = 180
+});
+
+test('user can successfully place order', function () {
+    Cart::create([
+        'user_id' => $this->user->id,
+        'product_id' => $this->product->id,
+        'quantity' => 2,
+        'price' => 90.00,
+    ]);
+
+    $response = $this->actingAs($this->user)->post(route('place.order'), [
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'phone' => '123456789',
+        'address' => '123 Main St',
+        'city' => 'Istanbul',
+        'country' => 'Turkey',
+        'zip_code' => '34000',
+        'shipping_method' => 'Free Shipping',
+        'payment_method' => 'Cash on Delivery',
+    ]);
+
+    $response->assertRedirect(route('home'));
+    $this->assertDatabaseHas('orders', [
+        'user_id' => $this->user->id,
+        'name' => 'John Doe',
+        'total' => 180.00,
+        'status' => 'New',
+    ]);
+
+    $order = Order::where('user_id', $this->user->id)->first();
+
+    $this->assertDatabaseHas('order_items', [
+        'order_id' => $order->id,
+        'product_id' => $this->product->id,
+        'product_title' => $this->product->title,
+        'price' => 90.00,
+        'quantity' => 2,
+        'total' => 180.00,
+    ]);
+
+    // Cart should be empty in database
+    $this->assertDatabaseMissing('carts', [
+        'user_id' => $this->user->id,
+    ]);
+
+    // Product stock should decrement: 5 - 2 = 3
+    expect($this->product->fresh()->stock)->toBe(3);
+});
+
+test('order placement fails if stock is depleted after adding to cart', function () {
+    Cart::create([
+        'user_id' => $this->user->id,
+        'product_id' => $this->product->id,
+        'quantity' => 3,
+        'price' => 90.00,
+    ]);
+
+    // Deplete stock manually in the database
+    $this->product->update(['stock' => 2]);
+
+    $response = $this->actingAs($this->user)->post(route('place.order'), [
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'phone' => '123456789',
+        'address' => '123 Main St',
+        'city' => 'Istanbul',
+        'country' => 'Turkey',
+        'zip_code' => '34000',
+        'shipping_method' => 'Free Shipping',
+        'payment_method' => 'Cash on Delivery',
+    ]);
+
+    $response->assertSessionHas('error');
+    $this->assertDatabaseMissing('orders', [
+        'user_id' => $this->user->id,
+    ]);
 });

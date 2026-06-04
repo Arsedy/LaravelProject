@@ -11,26 +11,22 @@
       <div class="card-header bg-white border-0 py-3 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
         <h4 class="mb-0 text-dark fw-semibold">Manage Orders</h4>
         <div class="d-flex flex-column flex-sm-row gap-2">
-          <!-- Search Form -->
+          <!-- Status Filter -->
           <form action="{{ route('admin.orders.index') }}" method="GET" class="d-flex gap-2">
-            <div class="input-group">
-              <input 
-                type="text" 
-                name="search" 
-                value="{{ $search }}" 
-                class="form-control" 
-                placeholder="Search ID, name, email, tel..."
-                aria-label="Search orders"
-              >
-              <button class="btn btn-outline-secondary" type="submit">
-                <i class="bi bi-search"></i>
-              </button>
-              @if($search)
-                <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-danger" title="Clear Search">
-                  <i class="bi bi-x-lg"></i>
-                </a>
-              @endif
-            </div>
+            <select name="status" class="form-select text-white bg-dark border-secondary" style="width: auto;">
+              <option value="">All Statuses</option>
+              @foreach($statuses as $item)
+                <option value="{{ $item }}" {{ $status === $item ? 'selected' : '' }}>
+                  {{ $item }}
+                </option>
+              @endforeach
+            </select>
+            <button class="btn btn-primary" type="submit">Filter</button>
+            @if($status)
+              <a href="{{ route('admin.orders.index') }}" class="btn btn-outline-danger" title="Clear Filter">
+                <i class="bi bi-x-lg"></i>
+              </a>
+            @endif
           </form>
         </div>
       </div>
@@ -53,8 +49,7 @@
               <tr>
                 <th class="ps-4 py-3 text-secondary text-uppercase fs-7" style="width: 80px;">ID</th>
                 <th class="py-3 text-secondary text-uppercase fs-7">Customer</th>
-                <th class="py-3 text-secondary text-uppercase fs-7">Product</th>
-                <th class="py-3 text-secondary text-uppercase fs-7" style="width: 100px;">Qty</th>
+                <th class="py-3 text-secondary text-uppercase fs-7">Products</th>
                 <th class="py-3 text-secondary text-uppercase fs-7">Total</th>
                 <th class="py-3 text-secondary text-uppercase fs-7" style="width: 150px;">Status</th>
                 <th class="py-3 text-secondary text-uppercase fs-7" style="width: 150px;">Date</th>
@@ -68,43 +63,41 @@
                   <td>
                     <div class="fw-bold text-white">{{ $order->name }}</div>
                     <div class="text-white-50 fs-8">{{ $order->email }}</div>
-                    <div class="text-white-50 fs-8">{{ $order->telephone }}</div>
+                    <div class="text-white-50 fs-8">{{ $order->phone }}</div>
                   </td>
                   <td>
-                    @if($order->product)
-                      <div class="fw-semibold text-white">{{ $order->product->title }}</div>
-                      @if($order->product->category)
-                        <div class="text-white-50 fs-8">{{ $order->product->category->title }}</div>
-                      @endif
-                    @else
-                      <span class="text-danger fw-semibold fs-8">Product Deleted</span>
-                    @endif
-                  </td>
-                  <td>
-                    <div class="text-white fw-semibold">{{ $order->quantity }}</div>
+                    @forelse($order->items as $item)
+                      <div class="fw-semibold text-white">{{ $item->quantity }}x {{ $item->product_title }}</div>
+                    @empty
+                      <span class="text-danger fw-semibold fs-8">No Items</span>
+                    @endforelse
                   </td>
                   <td>
                     <div class="fw-bold text-white">${{ number_format($order->total, 2) }}</div>
                   </td>
                   <td>
-                    @if($order->status === 'pending')
-                      <span class="badge bg-warning-subtle text-warning px-2.5 py-1.5 rounded-pill border border-warning-subtle fw-semibold text-uppercase">
-                        Pending
+                    @if($order->status === 'New')
+                      <span class="badge bg-primary px-2.5 py-1.5 rounded-pill border border-primary fw-semibold text-uppercase text-white">
+                        New
                       </span>
-                    @elseif($order->status === 'processing')
-                      <span class="badge bg-info-subtle text-info px-2.5 py-1.5 rounded-pill border border-info-subtle fw-semibold text-uppercase">
-                        Processing
+                    @elseif($order->status === 'Accepted')
+                      <span class="badge bg-info px-2.5 py-1.5 rounded-pill border border-info fw-semibold text-uppercase text-white">
+                        Accepted
                       </span>
-                    @elseif($order->status === 'completed')
-                      <span class="badge bg-success-subtle text-success px-2.5 py-1.5 rounded-pill border border-success-subtle fw-semibold text-uppercase">
+                    @elseif($order->status === 'Onshipping')
+                      <span class="badge bg-warning px-2.5 py-1.5 rounded-pill border border-warning fw-semibold text-uppercase text-white">
+                        Onshipping
+                      </span>
+                    @elseif($order->status === 'Completed')
+                      <span class="badge bg-success px-2.5 py-1.5 rounded-pill border border-success fw-semibold text-uppercase text-white">
                         Completed
                       </span>
-                    @elseif($order->status === 'canceled')
-                      <span class="badge bg-danger-subtle text-danger px-2.5 py-1.5 rounded-pill border border-danger-subtle fw-semibold text-uppercase">
-                        Canceled
+                    @elseif($order->status === 'Cancelled')
+                      <span class="badge bg-danger px-2.5 py-1.5 rounded-pill border border-danger fw-semibold text-uppercase text-white">
+                        Cancelled
                       </span>
                     @else
-                      <span class="badge bg-secondary-subtle text-secondary px-2.5 py-1.5 rounded-pill border border-secondary-subtle fw-semibold text-uppercase">
+                      <span class="badge bg-secondary px-2.5 py-1.5 rounded-pill border border-secondary fw-semibold text-uppercase text-white">
                         {{ $order->status }}
                       </span>
                     @endif

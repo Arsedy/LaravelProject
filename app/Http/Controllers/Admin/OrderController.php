@@ -15,22 +15,20 @@ class OrderController extends Controller
      */
     public function index(Request $request): View
     {
-        $search = $request->input('search');
+        $status = $request->input('status');
 
         $orders = Order::query()
-            ->with(['user', 'product'])
-            ->when($search, function ($query, $search) {
-                $query->where('id', $search)
-                    ->orWhere('name', 'like', "%{$search}%")
-                    ->orWhere('email', 'like', "%{$search}%")
-                    ->orWhere('telephone', 'like', "%{$search}%")
-                    ->orWhere('status', 'like', "%{$search}%");
+            ->with(['user', 'items'])
+            ->when($status, function ($query, $status) {
+                $query->where('status', $status);
             })
             ->latest()
             ->paginate(10)
             ->withQueryString();
 
-        return view('admin.orders.index', compact('orders', 'search'));
+        $statuses = Order::STATUSES;
+
+        return view('admin.orders.index', compact('orders', 'statuses', 'status'));
     }
 
     /**
@@ -38,9 +36,10 @@ class OrderController extends Controller
      */
     public function show(Order $order): View
     {
-        $order->load(['user', 'product.category']);
+        $order->load(['items.product', 'user']);
+        $statuses = Order::STATUSES;
 
-        return view('admin.orders.show', compact('order'));
+        return view('admin.orders.show', compact('order', 'statuses'));
     }
 
     /**
@@ -49,7 +48,7 @@ class OrderController extends Controller
     public function update(Request $request, Order $order): RedirectResponse
     {
         $validated = $request->validate([
-            'status' => ['required', 'string', 'in:pending,processing,completed,canceled'],
+            'status' => ['required', 'string', 'in:'.implode(',', Order::STATUSES)],
         ]);
 
         $order->update($validated);

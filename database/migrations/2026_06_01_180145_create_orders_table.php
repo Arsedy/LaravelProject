@@ -14,14 +14,25 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->string('name');
             $table->string('email');
-            $table->string('address');
-            $table->string('telephone');
-            $table->integer('quantity')->default(1);
-            $table->decimal('total', 10, 2);
-            $table->string('status')->default('pending');
+            $table->string('phone')->nullable();
+            $table->text('address');
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->decimal('subtotal', 10, 2)->default(0);
+            $table->decimal('shipping_price', 10, 2)->default(0);
+            $table->decimal('total', 10, 2)->default(0);
+            $table->string('shipping_method')->default('Free Shipping');
+            $table->string('payment_method')->default('Cash / Bank Transfer');
+            $table->enum('status', [
+                'New',
+                'Accepted',
+                'Cancelled',
+                'Onshipping',
+                'Completed',
+            ])->default('New');
             $table->timestamps();
         });
     }

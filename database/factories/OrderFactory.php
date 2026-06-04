@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\Order;
-use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -21,14 +20,19 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'product_id' => Product::factory(),
             'name' => $this->faker->name(),
             'email' => $this->faker->safeEmail(),
+            'phone' => $this->faker->phoneNumber(),
             'address' => $this->faker->streetAddress(),
-            'telephone' => $this->faker->phoneNumber(),
-            'quantity' => $this->faker->numberBetween(1, 5),
+            'city' => $this->faker->city(),
+            'country' => $this->faker->country(),
+            'zip_code' => $this->faker->postcode(),
+            'subtotal' => $this->faker->randomFloat(2, 20, 2000),
+            'shipping_price' => $this->faker->randomElement([0, 4]),
             'total' => $this->faker->randomFloat(2, 20, 2000),
-            'status' => $this->faker->randomElement(['pending', 'processing', 'completed', 'canceled']),
+            'shipping_method' => $this->faker->randomElement(['Free Shipping', 'Standard Shipping']),
+            'payment_method' => $this->faker->randomElement(['Cash on Delivery', 'Direct Bank Transfer', 'Paypal']),
+            'status' => $this->faker->randomElement(['New', 'Accepted', 'Cancelled', 'Onshipping', 'Completed']),
         ];
     }
 }

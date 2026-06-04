@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
@@ -14,9 +15,19 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::redirect('/home', '/');
 Route::get('/store', [HomeController::class, 'store'])->name('store');
 Route::get('/product', [HomeController::class, 'product'])->name('product');
-Route::get('/checkout', [HomeController::class, 'checkout'])->name('checkout');
-Route::post('/checkout', [OrderController::class, 'store'])->name('orders.store');
 Route::get('/blank', [HomeController::class, 'blank'])->name('blank');
+
+Route::middleware(['auth'])->group(function () {
+    // Cart Routes
+    Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+    Route::post('/cart/add/{product}', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update/{cart}', [CartController::class, 'update'])->name('cart.update');
+    Route::delete('/cart/remove/{cart}', [CartController::class, 'remove'])->name('cart.remove');
+
+    // Checkout and Place Order Routes
+    Route::get('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    Route::post('/place-order', [OrderController::class, 'placeOrder'])->name('place.order');
+});
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

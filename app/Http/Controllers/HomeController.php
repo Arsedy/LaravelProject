@@ -25,7 +25,12 @@ class HomeController extends Controller
         $productId = $request->query('product_id');
         $product = Product::find($productId) ?? Product::first();
 
-        return view('front.product', compact('product'));
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->limit(4)
+            ->get();
+
+        return view('front.product', compact('product', 'relatedProducts'));
     }
 
     public function checkout(Request $request): View

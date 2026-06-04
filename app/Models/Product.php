@@ -63,10 +63,18 @@ class Product extends Model
     }
 
     /**
-     * Get the orders for the product.
+     * Get the order items for the product.
      */
-    public function orders(): HasMany
+    public function orderItems(): HasMany
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(OrderItem::class);
+    }
+
+    /**
+     * Get the cart items for the product.
+     */
+    public function carts(): HasMany
+    {
+        return $this->hasMany(Cart::class);
     }
 }

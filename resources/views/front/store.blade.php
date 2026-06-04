@@ -284,7 +284,10 @@
 											</div>
 										</div>
 										<div class="add-to-cart">
-											<a href="{{ route('checkout', ['product_id' => $product->id]) }}" class="add-to-cart-btn" style="display: block; text-align: center; line-height: 40px;"><i class="fa fa-shopping-cart"></i> add to cart</a>
+											<form action="{{ route('cart.add', $product->id) }}" method="POST">
+												@csrf
+												<button type="submit" class="add-to-cart-btn" style="width: 100%; border: none; background: none; color: inherit; height: 40px; display: block; text-align: center; line-height: 40px;"><i class="fa fa-shopping-cart"></i> add to cart</button>
+											</form>
 										</div>
 									</div>
 								</div>

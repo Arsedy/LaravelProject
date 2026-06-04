@@ -1,4 +1,19 @@
-		<!-- HEADER -->
+		@php
+    use App\Models\Cart;
+    $headerCartItems = collect();
+    $headerCartCount = 0;
+    $headerCartTotal = 0;
+    if (auth()->check()) {
+        $headerCartItems = Cart::with('product')
+            ->where('user_id', auth()->id())
+            ->get();
+        $headerCartCount = $headerCartItems->sum('quantity');
+        $headerCartTotal = $headerCartItems->sum(function ($item) {
+            return $item->price * $item->quantity;
+        });
+    }
+@endphp
+<!-- HEADER -->
 		<header>
 			<!-- TOP HEADER -->
 			<div id="top-header">
@@ -84,42 +99,57 @@
 
 								<!-- Cart -->
 								<div class="dropdown">
-									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+									<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" style="cursor: pointer;">
 										<i class="fa fa-shopping-cart"></i>
 										<span>Your Cart</span>
-										<div class="qty">3</div>
+										<div class="qty">{{ $headerCartCount }}</div>
 									</a>
 									<div class="cart-dropdown">
 										<div class="cart-list">
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
-
-											<div class="product-widget">
-												<div class="product-img">
-													<img src="{{ asset('frontend-assets') }}/img/product02.png" alt="">
-												</div>
-												<div class="product-body">
-													<h3 class="product-name"><a href="#">product name goes here</a></h3>
-													<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-												</div>
-												<button class="delete"><i class="fa fa-close"></i></button>
-											</div>
+											@auth
+												@forelse($headerCartItems as $item)
+													<div class="product-widget">
+														<div class="product-img">
+															@if($item->product && $item->product->image)
+																<img src="{{ asset($item->product->image) }}" alt="{{ $item->product->title }}">
+															@else
+																<img src="{{ asset('frontend-assets') }}/img/product01.png" alt="">
+															@endif
+														</div>
+														<div class="product-body">
+															<h3 class="product-name">
+																@if($item->product)
+																	<a href="{{ route('product', ['product_id' => $item->product->id]) }}">{{ $item->product->title }}</a>
+																@else
+																	<a href="#">Product Deleted</a>
+																@endif
+															</h3>
+															<h4 class="product-price"><span class="qty">{{ $item->quantity }}x</span>${{ number_format($item->price, 2) }}</h4>
+														</div>
+														<form action="{{ route('cart.remove', $item->id) }}" method="POST" style="display:inline;">
+															@csrf
+															@method('DELETE')
+															<button type="submit" class="delete"><i class="fa fa-close"></i></button>
+														</form>
+													</div>
+												@empty
+													<p style="padding: 15px 0 0; text-align: center; color: #8D99AE; margin: 0;">Your cart is empty.</p>
+												@endforelse
+											@else
+												<p style="padding: 15px 0 0; text-align: center; color: #8D99AE; margin: 0;">Please login to view your cart.</p>
+											@endauth
 										</div>
 										<div class="cart-summary">
-											<small>3 Item(s) selected</small>
-											<h5>SUBTOTAL: $2940.00</h5>
+											<small>{{ $headerCartCount }} Item(s) selected</small>
+											<h5>SUBTOTAL: ${{ number_format($headerCartTotal, 2) }}</h5>
 										</div>
 										<div class="cart-btns">
-											<a href="{{ route('store') }}">View Cart</a>
-											<a href="{{ route('checkout') }}">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+											@auth
+												<a href="{{ route('cart.index') }}">View Cart</a>
+												<a href="{{ route('checkout') }}">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+											@else
+												<a href="{{ route('login') }}" style="width: 100%; text-align: center; background-color: #D10024;">Login <i class="fa fa-arrow-circle-right"></i></a>
+											@endauth
 										</div>
 									</div>
 								</div>

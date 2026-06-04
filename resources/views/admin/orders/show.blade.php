@@ -32,13 +32,31 @@
               <td class="text-white">{{ $order->email }}</td>
             </tr>
             <tr>
-              <th class="ps-0 text-white-50">Telephone:</th>
-              <td class="text-white">{{ $order->telephone }}</td>
+              <th class="ps-0 text-white-50">Phone:</th>
+              <td class="text-white">{{ $order->phone }}</td>
             </tr>
             <tr>
               <th class="ps-0 text-white-50">Delivery Address:</th>
               <td class="text-white font-monospace">{{ $order->address }}</td>
             </tr>
+            @if($order->city)
+              <tr>
+                <th class="ps-0 text-white-50">City:</th>
+                <td class="text-white">{{ $order->city }}</td>
+              </tr>
+            @endif
+            @if($order->country)
+              <tr>
+                <th class="ps-0 text-white-50">Country:</th>
+                <td class="text-white">{{ $order->country }}</td>
+              </tr>
+            @endif
+            @if($order->zip_code)
+              <tr>
+                <th class="ps-0 text-white-50">ZIP Code:</th>
+                <td class="text-white font-monospace">{{ $order->zip_code }}</td>
+              </tr>
+            @endif
             <tr>
               <th class="ps-0 text-white-50">Account Status:</th>
               <td>
@@ -77,10 +95,9 @@
           <div class="mb-3">
             <label for="status" class="form-label text-white-50">Order Status</label>
             <select name="status" id="status" class="form-select text-white bg-dark border-secondary">
-              <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pending</option>
-              <option value="processing" {{ $order->status === 'processing' ? 'selected' : '' }}>Processing</option>
-              <option value="completed" {{ $order->status === 'completed' ? 'selected' : '' }}>Completed</option>
-              <option value="canceled" {{ $order->status === 'canceled' ? 'selected' : '' }}>Canceled</option>
+              @foreach($statuses as $status)
+                <option value="{{ $status }}" {{ $order->status === $status ? 'selected' : '' }}>{{ $status }}</option>
+              @endforeach
             </select>
           </div>
           
@@ -100,63 +117,53 @@
         <h5 class="mb-0 text-dark fw-bold">Order Items</h5>
       </div>
       <div class="card-body">
-        @if($order->product)
-          <div class="d-flex align-items-center mb-4 p-3 bg-dark-subtle rounded-3 border border-secondary-subtle">
-            <div class="me-3">
-              @if($order->product->image)
-                <img 
-                  src="{{ asset($order->product->image) }}" 
-                  alt="{{ $order->product->title }}" 
-                  class="img-thumbnail rounded-3 shadow-sm" 
-                  style="width: 80px; height: 80px; object-fit: cover;"
-                >
-              @else
-                <div class="bg-dark text-white-50 rounded-3 d-flex align-items-center justify-content-center border" style="width: 80px; height: 80px;">
-                  <i class="bi bi-box" style="font-size: 2rem;"></i>
-                </div>
-              @endif
-            </div>
-            <div class="flex-grow-1">
-              <h6 class="mb-1 text-white fw-bold">{{ $order->product->title }}</h6>
-              <p class="mb-0 text-white-50 fs-8">Category: {{ $order->product->category->title ?? 'General' }}</p>
-              @if($order->product->discount > 0)
-                <p class="mb-0 text-danger fs-8 fw-semibold">Discount: {{ $order->product->discount }}% Off</p>
-              @endif
-            </div>
-          </div>
-
-          <table class="table table-borderless">
+        <div class="table-responsive">
+          <table class="table table-borderless align-middle mb-0">
+            <thead>
+              <tr class="border-bottom border-secondary-subtle">
+                <th class="text-secondary text-uppercase fs-8 ps-0">Product</th>
+                <th class="text-center text-secondary text-uppercase fs-8" style="width: 100px;">Price</th>
+                <th class="text-center text-secondary text-uppercase fs-8" style="width: 80px;">Qty</th>
+                <th class="text-end text-secondary text-uppercase fs-8 pe-0" style="width: 120px;">Total</th>
+              </tr>
+            </thead>
             <tbody>
+              @forelse($order->items as $item)
+                <tr class="border-bottom border-dark-subtle">
+                  <td class="ps-0 py-3">
+                    <div class="fw-semibold text-white">{{ $item->product_title }}</div>
+                    @if($item->product && $item->product->category)
+                      <div class="text-white-50 fs-8">{{ $item->product->category->title }}</div>
+                    @endif
+                  </td>
+                  <td class="text-center text-white">${{ number_format($item->price, 2) }}</td>
+                  <td class="text-center text-white fw-bold">{{ $item->quantity }}</td>
+                  <td class="text-end text-white fw-bold pe-0">${{ number_format($item->total, 2) }}</td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="4" class="text-center text-white-50 py-3">No Items found for this order.</td>
+                </tr>
+              @endforelse
+              
               <tr>
-                <td class="text-white-50 ps-0">Unit Price:</td>
-                <td class="text-end text-white">
-                  @php
-                    $unitPrice = $order->product->price;
-                    if ($order->product->discount > 0) {
-                      $unitPrice = $order->product->price - ($order->product->price * ($order->product->discount / 100));
-                    }
-                  @endphp
-                  ${{ number_format($unitPrice, 2) }}
-                  @if($order->product->discount > 0)
-                    <del class="text-muted fs-8">${{ number_format($order->product->price, 2) }}</del>
-                  @endif
-                </td>
+                <td colspan="2" class="border-0"></td>
+                <td class="text-white-50 ps-0 pt-3">Subtotal:</td>
+                <td class="text-end text-white pt-3 pe-0">${{ number_format($order->subtotal, 2) }}</td>
               </tr>
               <tr>
-                <td class="text-white-50 ps-0">Quantity ordered:</td>
-                <td class="text-end text-white fw-bold">{{ $order->quantity }}</td>
+                <td colspan="2" class="border-0"></td>
+                <td class="text-white-50 ps-0">Shipping:</td>
+                <td class="text-end text-white pe-0">${{ number_format($order->shipping_price, 2) }}</td>
               </tr>
               <tr class="border-top border-secondary-subtle">
+                <td colspan="2" class="border-0"></td>
                 <td class="ps-0 fs-5 text-white fw-bold">Grand Total:</td>
-                <td class="text-end fs-5 text-white fw-bold">${{ number_format($order->total, 2) }}</td>
+                <td class="text-end fs-5 text-white fw-bold pe-0">${{ number_format($order->total, 2) }}</td>
               </tr>
             </tbody>
           </table>
-        @else
-          <div class="alert alert-danger mb-0">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i> The product associated with this order has been deleted.
-          </div>
-        @endif
+        </div>
       </div>
     </div>
   </div>

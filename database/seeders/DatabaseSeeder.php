@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Role;
 use App\Models\User;
@@ -40,14 +41,55 @@ class DatabaseSeeder extends Seeder
         foreach ($users as $user) {
             Order::factory()->count(2)->create([
                 'user_id' => $user->id,
-                'product_id' => $products->random()->id,
-            ]);
+            ])->each(function ($order) use ($products) {
+                $product = $products->random();
+                $qty = rand(1, 3);
+                $price = $product->price;
+                if ($product->discount > 0) {
+                    $price = $product->price - ($product->price * ($product->discount / 100));
+                }
+
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $product->id,
+                    'product_title' => $product->title,
+                    'price' => $price,
+                    'quantity' => $qty,
+                    'total' => $price * $qty,
+                ]);
+
+                // Update order total and subtotal to match
+                $order->update([
+                    'subtotal' => $price * $qty,
+                    'total' => $price * $qty + $order->shipping_price,
+                ]);
+            });
         }
 
         // Seed some guest orders
         Order::factory()->count(5)->create([
             'user_id' => null,
-            'product_id' => $products->random()->id,
-        ]);
+        ])->each(function ($order) use ($products) {
+            $product = $products->random();
+            $qty = rand(1, 2);
+            $price = $product->price;
+            if ($product->discount > 0) {
+                $price = $product->price - ($product->price * ($product->discount / 100));
+            }
+
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $product->id,
+                'product_title' => $product->title,
+                'price' => $price,
+                'quantity' => $qty,
+                'total' => $price * $qty,
+            ]);
+
+            $order->update([
+                'subtotal' => $price * $qty,
+                'total' => $price * $qty + $order->shipping_price,
+            ]);
+        });
     }
 }

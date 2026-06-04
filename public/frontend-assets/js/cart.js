@@ -117,6 +117,7 @@ $(document).ready(function() {
     // -------------------------------------------------------------
     
     function renderHeaderCart() {
+        return; // Handled server-side by Blade template
         const cart = getCart();
         const $cartDropdown = $('.header-ctn .dropdown:has(.fa-shopping-cart) .cart-dropdown');
         const $cartList = $('.header-ctn .dropdown:has(.fa-shopping-cart) .cart-list');
@@ -305,6 +306,8 @@ $(document).ready(function() {
     // -------------------------------------------------------------
     
     // Add to Cart from Index and Store page (Product Grids)
+    // Commented out to allow standard HTML POST submission to the server
+    /*
     $(document).on('click', '.add-to-cart .add-to-cart-btn', function(e) {
         e.preventDefault();
         
@@ -335,8 +338,11 @@ $(document).ready(function() {
 
         addToCart(product);
     });
+    */
 
     // Add to Cart from Single Product Detail Page
+    // Commented out to allow standard HTML POST submission to the server
+    /*
     $(document).on('click', '.product-details .add-to-cart-btn', function(e) {
         e.preventDefault();
         
@@ -392,6 +398,7 @@ $(document).ready(function() {
 
         addToCart(product);
     });
+    */
 
     // Delete item from cart (dropdown click listener & checkout page)
     $(document).on('click', '.delete-cart-item', function(e) {
@@ -541,6 +548,7 @@ $(document).ready(function() {
     // -------------------------------------------------------------
     
     function renderCheckoutPage() {
+        return; // Handled server-side by Blade template
         const $orderProducts = $('.order-products');
         const $orderTotal = $('.order-total');
         const cart = getCart();
@@ -618,19 +626,16 @@ $(document).ready(function() {
         if ($billingDetails.length === 0) return false;
 
         const fieldsToValidate = [
-            { name: 'first-name', label: 'First Name' },
-            { name: 'last-name', label: 'Last Name' },
+            { name: 'name', label: 'Full Name' },
             { name: 'email', label: 'Email Address', isEmail: true },
             { name: 'address', label: 'Address' },
-            { name: 'city', label: 'City' },
-            { name: 'country', label: 'Country' },
-            { name: 'zip-code', label: 'ZIP Code' },
-            { name: 'tel', label: 'Telephone Number' }
+            { name: 'phone', label: 'Telephone Number' }
         ];
 
         fieldsToValidate.forEach(field => {
             const $input = $billingDetails.find(`input[name="${field.name}"]`);
-            const val = $input.val().trim();
+            if ($input.length === 0) return;
+            const val = ($input.val() || '').trim();
             const $parent = $input.closest('.form-group');
 
             // Clear previous errors
@@ -650,14 +655,16 @@ $(document).ready(function() {
             }
         });
 
-        // Validate terms and conditions
+        // Validate terms and conditions ONLY if it exists in DOM
         const $termsCheckbox = $('#terms');
-        const $termsParent = $termsCheckbox.closest('.input-checkbox');
-        $termsParent.find('.error-msg').remove();
+        if ($termsCheckbox.length > 0) {
+            const $termsParent = $termsCheckbox.closest('.input-checkbox');
+            $termsParent.find('.error-msg').remove();
 
-        if (!$termsCheckbox.is(':checked')) {
-            isValid = false;
-            $termsParent.append('<span class="error-msg" style="display: block; margin-top: 5px;">You must accept the terms & conditions.</span>');
+            if (!$termsCheckbox.is(':checked')) {
+                isValid = false;
+                $termsParent.append('<span class="error-msg" style="display: block; margin-top: 5px;">You must accept the terms & conditions.</span>');
+            }
         }
 
         return isValid;
@@ -674,7 +681,7 @@ $(document).ready(function() {
 
         // Perform validation
         if (!validateCheckoutForm()) {
-            showToast('Validation Error', './img/logo.png', 'Please check your billing details and accept the terms.', 'info');
+            showToast('Validation Error', './img/logo.png', 'Please check your billing details.', 'info');
             // Scroll to billing details
             $('html, body').animate({
                 scrollTop: $('.billing-details').offset().top - 100
@@ -682,32 +689,67 @@ $(document).ready(function() {
             return;
         }
 
-        // Gather order details
         const cart = getCart();
         let total = 0;
         cart.forEach(item => total += item.price * item.quantity);
 
         const $billing = $('.billing-details');
-        const customerName = `${$billing.find('input[name="first-name"]').val()} ${$billing.find('input[name="last-name"]').val()}`;
+        const customerName = $billing.find('input[name="name"]').val();
         const address = $billing.find('input[name="address"]').val();
-        const city = $billing.find('input[name="city"]').val();
 
-        const orderData = {
-            name: customerName,
-            address: address,
-            city: city,
-            total: total.toFixed(2)
-        };
+        // AJAX request to backend
+        const $form = $('.billing-details').closest('form');
+        const formData = $form.serialize();
+        const $submitBtn = $(this);
+        const originalText = $submitBtn.text();
 
-        // Show animated checkout success modal
-        showOrderSuccessModal(orderData);
+        $submitBtn.prop('disabled', true).text('Processing...');
 
-        // Clear cart
-        clearCart();
+        $.ajax({
+            url: $form.attr('action'),
+            method: 'POST',
+            data: formData,
+            headers: {
+                'Accept': 'application/json'
+            },
+            success: function(response) {
+                // Clear cart upon successful database placement
+                clearCart();
+
+                const orderData = {
+                    name: customerName,
+                    address: address,
+                    city: '',
+                    total: total.toFixed(2),
+                    order_id: response.order_id
+                };
+
+                // Show animated checkout success modal
+                showOrderSuccessModal(orderData);
+            },
+            error: function(xhr) {
+                $submitBtn.prop('disabled', false).text(originalText);
+                
+                let errorMsg = 'Failed to place order. Please try again.';
+                if (xhr.status === 422 && xhr.responseJSON) {
+                    if (xhr.responseJSON.errors) {
+                        const errors = xhr.responseJSON.errors;
+                        const firstKey = Object.keys(errors)[0];
+                        errorMsg = errors[firstKey][0];
+                    } else if (xhr.responseJSON.error) {
+                        errorMsg = xhr.responseJSON.error;
+                    }
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                }
+                
+                showToast('Order Error', './img/logo.png', errorMsg, 'info');
+            }
+        });
     });
 
     function showOrderSuccessModal(orderData) {
-        const orderNum = 'EL' + Math.floor(100000 + Math.random() * 900000);
+        const orderNum = orderData.order_id ? 'EL' + orderData.order_id : ('EL' + Math.floor(100000 + Math.random() * 900000));
         
         const modalHtml = `
             <div class="modal-overlay" id="order-success-overlay">
@@ -728,7 +770,7 @@ $(document).ready(function() {
                         </div>
                         <div>
                             <span>Shipping Address:</span>
-                            <strong>${orderData.address}, ${orderData.city}</strong>
+                            <strong>${orderData.address}${orderData.city ? ', ' + orderData.city : ''}</strong>
                         </div>
                         <div>
                             <span>Total Paid:</span>
@@ -794,24 +836,39 @@ $(document).ready(function() {
     // -------------------------------------------------------------
     
     // Initial UI render
-    renderHeaderCart();
     renderHeaderWishlist();
-    renderCheckoutPage();
+
+    // Listen for shipping method changes on the checkout page
+    $(document).on('change', 'input[name="shipping_method"]', function() {
+        const method = $(this).val();
+        const $shippingDisplay = $('#shipping-display');
+        const $grandTotalDisplay = $('#grand-total-display');
+        
+        if ($shippingDisplay.length === 0 || $grandTotalDisplay.length === 0) return;
+
+        // Fetch the subtotal from the page
+        const subtotalText = $('.sub-total').text().replace(/[^0-9.]/g, '');
+        const subtotal = parseFloat(subtotalText) || 0;
+
+        let shippingPrice = 0;
+        let shippingText = 'Free Shipping ($0.00)';
+
+        if (method === 'Standard Shipping') {
+            shippingPrice = 4.00;
+            shippingText = 'Standard Shipping ($4.00)';
+        }
+
+        const total = subtotal + shippingPrice;
+
+        $shippingDisplay.text(shippingText);
+        $grandTotalDisplay.text(`$${total.toFixed(2)}`);
+    });
 
     // Listen for storage events (updates in other tabs)
     window.addEventListener('storage', function(e) {
-        if (e.key === CART_KEY) {
-            renderHeaderCart();
-            renderCheckoutPage();
-        } else if (e.key === WISHLIST_KEY) {
+        if (e.key === WISHLIST_KEY) {
             renderHeaderWishlist();
         }
-    });
-
-    // Listen for local cart update events on same tab
-    $(document).on('cartUpdated', function() {
-        renderHeaderCart();
-        renderCheckoutPage();
     });
 
     // Listen for local wishlist update events on same tab
