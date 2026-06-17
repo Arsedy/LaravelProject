@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -13,11 +14,35 @@ class HomeController extends Controller
         return view('front.home');
     }
 
-    public function store(): View
+    public function store(Request $request): View
     {
-        $products = Product::where('status', true)->with('category')->paginate(9);
+        $categories = Category::where('status', true)->get();
+        $query = Product::where('status', true)->with('category');
 
-        return view('front.store', compact('products'));
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('keywords', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+
+        if ($request->filled('price_min')) {
+            $query->where('price', '>=', $request->input('price_min'));
+        }
+
+        if ($request->filled('price_max')) {
+            $query->where('price', '<=', $request->input('price_max'));
+        }
+
+        $products = $query->paginate(9)->withQueryString();
+
+        return view('front.store', compact('products', 'categories'));
     }
 
     public function product(Request $request): View
@@ -31,20 +56,6 @@ class HomeController extends Controller
             ->get();
 
         return view('front.product', compact('product', 'relatedProducts'));
-    }
-
-    public function checkout(Request $request): View
-    {
-        $productId = $request->query('product_id');
-        $quantity = (int) $request->query('quantity', 1);
-        if ($quantity < 1) {
-            $quantity = 1;
-        }
-
-        // Retrieve product or fallback to the first active/existing product
-        $product = Product::find($productId) ?? Product::first();
-
-        return view('front.checkout', compact('product', 'quantity'));
     }
 
     public function blank(): View

@@ -1,5 +1,7 @@
 		@php
     use App\Models\Cart;
+    use App\Models\Category;
+    $headerCategories = Category::where('status', true)->get();
     $headerCartItems = collect();
     $headerCartCount = 0;
     $headerCartTotal = 0;
@@ -63,14 +65,15 @@
 						<!-- SEARCH BAR -->
 						<div class="col-md-6">
 							<div class="header-search">
-								<form>
-									<select class="input-select">
-										<option value="0">All Categories</option>
-										<option value="1">Category 01</option>
-										<option value="1">Category 02</option>
+								<form action="{{ route('store') }}" method="GET">
+									<select class="input-select" name="category_id">
+										<option value="">All Categories</option>
+										@foreach($headerCategories as $cat)
+											<option value="{{ $cat->id }}" {{ request('category_id') == $cat->id ? 'selected' : '' }}>{{ $cat->title }}</option>
+										@endforeach
 									</select>
-									<input class="input" placeholder="Search here">
-									<button class="search-btn">Search</button>
+									<input class="input" name="search" placeholder="Search here" value="{{ request('search') }}">
+									<button type="submit" class="search-btn">Search</button>
 								</form>
 							</div>
 						</div>

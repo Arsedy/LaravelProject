@@ -43,5 +43,5 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('categories', CategoryController::class);
     Route::resource('products', ProductController::class);
     Route::resource('orders', AdminOrderController::class)->only(['index', 'show', 'update', 'destroy']);
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->only(['index', 'edit', 'update', 'destroy']);
 });

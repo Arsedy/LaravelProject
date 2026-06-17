@@ -105,13 +105,13 @@ graph TD
     C -->|Add to Cart| E[Checkout Form]
     D -->|Autofills Name/Email| E
     
-    E -->|Places Order| F[Order Pending]
+    E -->|Places Order| F[Order New]
     F -->|Decrements Stock| G[Product Inventory]
     
     H[Admin User] -->|Logs into Admin Panel| I[Admin Dashboard]
     I -->|Manage Users/Roles| J[Sync Roles: User <-> Admin]
     I -->|Manage Products| K[Create/Edit Products]
-    I -->|Manage Orders| L[Update Order Status: Pending/Processing/Completed/Canceled]
+    I -->|Manage Orders| L[Update Order Status: New/Accepted/Onshipping/Completed/Cancelled]
 ```
 
 ### 1. User & Role Management Pipeline
@@ -146,7 +146,7 @@ graph TD
 1. **Order Reception:** Admins visit `/admin/orders` to view all new e-commerce requests.
 2. **Status Progression:**
    - Click **View Details** on an order to inspect customer info and the specific product breakdown.
-   - Use the status dropdown to update the progress: `Pending` ➡️ `Processing` ➡️ `Completed` (or `Canceled`).
+   - Use the status dropdown to update the progress: `New` ➡️ `Accepted` ➡️ `Onshipping` ➡️ `Completed` (or `Cancelled`).
    - Saving updates status changes instantly.
 
 ## 🧪 Testing
